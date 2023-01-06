@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CEP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Consultando CEP</h1>
+        <form>
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" class="form-control" maxlength="9" id="cep">
+                <small>00000-000</small>
+            </div>
+            <div class="form-group">
+                <label for="logradouro">Logradouro</label>
+                <input type="text" class="form-control" id="logradouro">
+                <small>Rua.</small>
+            </div>
+            <div class="form-group">
+                <label for="bairro">Bairro</label>
+                <input type="text" class="form-control" id="bairro">
+                <small>Bairro</small>
+            </div>
+            <div class="form-group">
+                <label for="localidade">Localidade</label>
+                <input type="text" class="form-control" id="localidade">
+                <small>Cidade</small>
+            </div>
+            <div class="form-group">
+                <label for="uf">UF</label>
+                <input type="text" class="form-control" id="uf">
+                <small>Estado</small>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const cep = document.querySelector("#cep")
+         
+        const endereco = ((data) =>{
+            for(const campos in data) {
+                if(document.querySelector("#" + campos)){
+                    document.querySelector("#"+campos).value = data[campos]
+                }
+            }
+        })
+
+        cep.addEventListener("blur", (e) => {
+            let consulta = cep.value.replace("-", "")
+            const options = {
+                method: "get",
+                cache: "default",
+                mode: "cors"
+            }
+            fetch(`https://viacep.com.br/ws/${consulta}/json/`, options)
+                .then((response) => {
+                    response.json()
+                    .then((data) => { endereco(data) })
+                }).catch((err) => {
+                    alert(err.message)
+                })
+        })
+    </script>
+</body>
+
+</html>
